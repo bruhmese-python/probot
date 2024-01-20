@@ -1,0 +1,25 @@
+#!/usr/bin/smsh
+
+import utils
+import browser
+
+Leave:
+	exit
+
+#if usb-key-connected
+Browser snapshot:
+	Open browser
+	Wait 4
+	New tab
+	Goto URL https://mail.google.com/mail/u/0/#inbox
+	Screenshot
+	Wait 1
+	Exit screenshot window
+	Close browser
+	Leave
+
+#main code to be executed
+cd "/media/admin/New Volume/Desktop/Python_files/probot"
+Browser snapshot
+#else
+echo "not authorized"
