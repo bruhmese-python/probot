@@ -3,6 +3,10 @@
 import utils
 import browser
 
+@python3 -c
+print:
+	print(r'%args%')	
+
 Leave:
 	exit
 
@@ -19,7 +23,7 @@ Browser snapshot:
 	Leave
 
 #main code to be executed
-cd "/media/admin/New Volume/Desktop/Python_files/probot"
+change directory to working directory
 Browser snapshot
 #else
-echo "not authorized"
+print not authorized

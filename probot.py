@@ -4,28 +4,50 @@ import os
 import read_conf
 import sys
 
+TITLE = 0
+MAX_STR_LEN = 20
+
 graph = str()
+gv_nodes = []
+secondary_relations = str()
+secondary_attr = '[color="gray50"];'
+
+sec_node_map = dict()
 
 
 def read_and_filter_lines(file_path):
+    def register_block():
+        if 0!=len(block_stmts):
+            blocks.append(block_stmts)
     decorators = dict()
     nodes = list()
 
+    blocks = []
     with open(file_path, 'r') as file:
         prev = ""
+        block_stmts = []
         for line in file:
             # Use the regex [^\t][^:]* to match lines that don't start with a tab and have any content after that
-            if re.match(r'[^\t#].*:', line):
+            if re.match(r'[^\t#].*:', line):        #label
                 label = line.strip()[:-1]
+                register_block()
+                block_stmts = []
+                block_stmts.append(label)
                 decorators[label] = prev
-            elif re.match(r'[^\t#][^:]*$', line):
+            elif re.match(r'[^\t@#][^:]*$', line):  #main stmts
                 stripped_line = line.strip()
                 if stripped_line!="":
                     if stripped_line.find("import") != 0:
                         nodes.append(stripped_line)
+            elif re.match(r'\t.*', line):           #block body
+                stripped_line = line.strip()
+                if stripped_line!="":
+                    block_stmts.append(stripped_line)
             prev = line
+    register_block()
+    #[print(x) for x in blocks] 
 
-    return nodes,decorators
+    return nodes,decorators,blocks
 
 def gprint(content:str):
     global graph
@@ -42,23 +64,53 @@ if __name__ == "__main__":
     icons_images = read_conf.read_tags_and_images("./data.conf")
 
     file_path = sys.argv[1]  # Replace with your file path
-    nodes,decorators = read_and_filter_lines(file_path)
-
-    gv_nodes = []
-    non_sequential_relations = str()
+    nodes,decorators,blocks = read_and_filter_lines(file_path)
 
     #decorators=>  label : decorator
     #nodes =>  label +(args) (optional)
 
     gprint(r'''digraph G { 
-        rankdir="LR";
-        node [shape=box, style="rounded,filled,setlinewidth(0)",fontsize="10", fontcolor="gray24", fillcolor="gray88"];''')
+        graph [nodesep="1", ranksep="2",rankdir="LR", pack=false];
+        node [shape=box, style="rounded,filled,setlinewidth(0)",forcelabels=true,fontname="Courier New",fontsize="10", fontcolor="gray24", fillcolor="gray88"];''')
+    for block in blocks:
+        side_nodes = []
+        registered_head = False
+        for node_cmd in block[1:]:
+            node_name = read_conf.new_node_name()
+
+            if not registered_head:
+                sec_node_map[block[0]] = node_name
+                registered_head = True
+
+            side_nodes.append(node_name)
+            t_len = len(node_cmd) 
+            node_cmd = node_cmd[:min(MAX_STR_LEN,node_cmd.__len__())] 
+            if t_len > MAX_STR_LEN:
+                node_cmd = node_cmd + '...' 
+            image_set_flag = False
+            for tag, img in icons_images.items():  #in list of images and tags
+                if node_cmd.find(tag) != -1:      #if found a tag name matching command 
+                    gprint(f"\t{node_name} [label=\"\",xlabel=\"{node_cmd}\",image=\"{img}\"];")
+                    image_set_flag = True
+                    break
+            if image_set_flag == False:
+                gprint(f"\t{node_name} [label=\"\",xlabel=\"{node_cmd}\",image=\"{icons_images['default']}\"];")
+        secondary_relations += '->'.join(side_nodes) + secondary_attr
+
+    gprint(r'''node [shape=box, style="rounded,filled,setlinewidth(0)",forcelabels=true,fontname="Courier New",fontsize="10", fontcolor="gray24", fillcolor="gray88"];''')
+
+    #main function
     for node_cmd in nodes:
         node_name = read_conf.new_node_name()
         plain_cmd_flag = False
+        t_len = len(node_cmd) 
+        node_cmd = node_cmd[:min(MAX_STR_LEN,node_cmd.__len__())] 
+        if t_len > MAX_STR_LEN:
+            node_cmd = node_cmd + '...' 
         for label, decorator in decorators.items(): #in function declarations
             if node_cmd.find(label) == 0:           #if identifier is the name of the function called
                 gv_nodes.append(node_name)
+                secondary_relations +=  node_name + "->" +sec_node_map[label] + secondary_attr
                 image_set_flag = False
                 for tag, img in icons_images.items():  #in list of images and tags
                     if decorator.find(tag) != -1:      #if found a tag name matching decorator 
@@ -82,7 +134,8 @@ if __name__ == "__main__":
                     gprint(f"\t{node_name} [label=\"\",xlabel=\"{node_cmd}\",image=\"{icons_images['default']}\"];")
             
         
-    gprint('\t' + '->'.join(gv_nodes) + ';')
+    gprint('\t' + '->'.join(gv_nodes) + '[color="deepskyblue2"];')
+    gprint('\n' + secondary_relations )
     gprint("}")
 
     with open('.graph.gv', 'w') as file:
