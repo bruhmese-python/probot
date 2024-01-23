@@ -82,7 +82,7 @@ if __name__ == "__main__":
     for block in blocks:
         side_nodes = []
         registered_head = False
-        for node_cmd in block[1:]:
+        for node_cmd in block:
             node_name = read_conf.new_node_name()
 
             if not registered_head:
