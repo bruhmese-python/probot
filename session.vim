@@ -27,25 +27,25 @@ noremap  Q :qall!
 noremap  q :q
 noremap  w :w
 nnoremap ; A;
-nnoremap F ?
-xnoremap F ?
 onoremap F ?
+xnoremap F ?
+nnoremap F ?
 snoremap F ?
-nmap Q gq
-xmap Q gq
 omap Q gq
+xmap Q gq
+nmap Q gq
 smap Q gq
-nnoremap T :tabnew %
-xnoremap T :tabnew %
 onoremap T :tabnew %
+xnoremap T :tabnew %
+nnoremap T :tabnew %
 snoremap T :tabnew %
-nnoremap \ :split
-xnoremap \ :split
 onoremap \ :split
+xnoremap \ :split
+nnoremap \ :split
 snoremap \ :split
-nnoremap f /
-xnoremap f /
 onoremap f /
+xnoremap f /
+nnoremap f /
 snoremap f /
 xmap gx <Plug>NetrwBrowseXVis
 nmap gx <Plug>NetrwBrowseX
@@ -139,9 +139,9 @@ set winminwidth=0
 set winwidth=1
 exe '1resize ' . ((&lines * 9 + 21) / 43)
 exe '2resize ' . ((&lines * 30 + 21) / 43)
-exe 'vert 2resize ' . ((&columns * 67 + 84) / 168)
+exe 'vert 2resize ' . ((&columns * 75 + 84) / 168)
 exe '3resize ' . ((&lines * 30 + 21) / 43)
-exe 'vert 3resize ' . ((&columns * 100 + 84) / 168)
+exe 'vert 3resize ' . ((&columns * 92 + 84) / 168)
 argglobal
 terminal ++curwin ++cols=168 ++rows=9 
 let s:term_buf_4 = bufnr()
@@ -270,12 +270,12 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 50 - ((4 * winheight(0) + 4) / 9)
+let s:l = 4 - ((3 * winheight(0) + 4) / 9)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 50
-normal! 022|
+keepjumps 4
+normal! 020|
 wincmd w
 argglobal
 balt /media/admin/New\ Volume/Desktop/Python_files/probot
@@ -404,12 +404,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 13 - ((12 * winheight(0) + 15) / 30)
+let s:l = 11 - ((10 * winheight(0) + 15) / 30)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 13
-normal! 021|
+keepjumps 11
+normal! 012|
 lcd /media/admin/New\ Volume/Desktop/Python_files/probot
 wincmd w
 argglobal
@@ -540,19 +540,19 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 60 - ((5 * winheight(0) + 15) / 30)
+let s:l = 114 - ((13 * winheight(0) + 15) / 30)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 60
-normal! 014|
+keepjumps 114
+normal! 017|
 wincmd w
-2wincmd w
+3wincmd w
 exe '1resize ' . ((&lines * 9 + 21) / 43)
 exe '2resize ' . ((&lines * 30 + 21) / 43)
-exe 'vert 2resize ' . ((&columns * 67 + 84) / 168)
+exe 'vert 2resize ' . ((&columns * 75 + 84) / 168)
 exe '3resize ' . ((&lines * 30 + 21) / 43)
-exe 'vert 3resize ' . ((&columns * 100 + 84) / 168)
+exe 'vert 3resize ' . ((&columns * 92 + 84) / 168)
 tabnext
 edit /media/admin/New\ Volume/Desktop/Python_files/probot/read_conf.py
 set splitbelow splitright
@@ -839,12 +839,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 2 - ((1 * winheight(0) + 4) / 8)
+let s:l = 1 - ((0 * winheight(0) + 4) / 8)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 2
-normal! 0
+keepjumps 1
+normal! 011|
 wincmd w
 argglobal
 if bufexists("/media/admin/New\ Volume/Desktop/Python_files/probot/.graph.gv") | buffer /media/admin/New\ Volume/Desktop/Python_files/probot/.graph.gv | else | edit /media/admin/New\ Volume/Desktop/Python_files/probot/.graph.gv | endif
@@ -988,14 +988,14 @@ exe '3resize ' . ((&lines * 31 + 21) / 43)
 exe 'vert 3resize ' . ((&columns * 108 + 84) / 168)
 tabnext 1
 set stal=1
-badd +15 /media/admin/New\ Volume/Desktop/Python_files/probot/sc.smsh
 badd +1 /media/admin/New\ Volume/Desktop/Python_files/probot/probot.py
 badd +11 /media/admin/New\ Volume/Desktop/Python_files/probot/read_conf.py
+badd +13 /media/admin/New\ Volume/Desktop/Python_files/probot/sc.smsh
 badd +1 /media/admin/New\ Volume/Desktop/Python_files/probot
 badd +1 ~/.vim/bundle/vim-snippets/UltiSnips/python.snippets
 badd +2 /media/admin/New\ Volume/Desktop/Python_files/probot/data.conf
-badd +93 /media/admin/New\ Volume/Desktop/Python_files/probot/.snippets
 badd +3 /media/admin/New\ Volume/Desktop/Python_files/probot/.graph.gv
+badd +93 /media/admin/New\ Volume/Desktop/Python_files/probot/.snippets
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif

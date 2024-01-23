@@ -15,7 +15,6 @@ Browser snapshot:
 	Open browser
 	Wait 4
 	New tab
-	Goto URL https://mail.google.com/mail/u/0/#inbox
 	Screenshot
 	Wait 1
 	Exit screenshot window
@@ -25,5 +24,5 @@ Browser snapshot:
 #main code to be executed
 change directory to working directory
 Browser snapshot
-#else
 print not authorized
+Leave 0

@@ -3,6 +3,7 @@ import re
 import os
 import read_conf
 import sys
+import tempfile
 
 TITLE = 0
 MAX_STR_LEN = 20
@@ -10,7 +11,7 @@ MAX_STR_LEN = 20
 graph = str()
 gv_nodes = []
 secondary_relations = str()
-secondary_attr = '[color="gray50"];'
+secondary_attr = '[label=\"{}\",color=\"gray50\",fontname=\"Courier New\",fontsize=\"10\", fontcolor=\"gray24\"];'
 
 sec_node_map = dict()
 
@@ -46,6 +47,7 @@ def read_and_filter_lines(file_path):
             prev = line
     register_block()
     #[print(x) for x in blocks] 
+    #print(decorators)
 
     return nodes,decorators,blocks
 
@@ -61,10 +63,15 @@ if __name__ == "__main__":
     elif argc > 2:
         print("Too many arguments")
         exit()
+
     icons_images = read_conf.read_tags_and_images("./data.conf")
 
     file_path = sys.argv[1]  # Replace with your file path
-    nodes,decorators,blocks = read_and_filter_lines(file_path)
+
+    real_file_path = ".smsh.tmp"
+    os.system("/usr/local/bin/.smsh/macro_preprocessor.py "+file_path+" "+real_file_path)
+
+    nodes,decorators,blocks = read_and_filter_lines(real_file_path)
 
     #decorators=>  label : decorator
     #nodes =>  label +(args) (optional)
@@ -95,7 +102,7 @@ if __name__ == "__main__":
                     break
             if image_set_flag == False:
                 gprint(f"\t{node_name} [label=\"\",xlabel=\"{node_cmd}\",image=\"{icons_images['default']}\"];")
-        secondary_relations += '->'.join(side_nodes) + secondary_attr
+        secondary_relations += '->'.join(side_nodes) + secondary_attr.format(" ")
 
     gprint(r'''node [shape=box, style="rounded,filled,setlinewidth(0)",forcelabels=true,fontname="Courier New",fontsize="10", fontcolor="gray24", fillcolor="gray88"];''')
 
@@ -104,13 +111,16 @@ if __name__ == "__main__":
         node_name = read_conf.new_node_name()
         plain_cmd_flag = False
         t_len = len(node_cmd) 
+        og_node_cmd = node_cmd
         node_cmd = node_cmd[:min(MAX_STR_LEN,node_cmd.__len__())] 
         if t_len > MAX_STR_LEN:
             node_cmd = node_cmd + '...' 
         for label, decorator in decorators.items(): #in function declarations
             if node_cmd.find(label) == 0:           #if identifier is the name of the function called
                 gv_nodes.append(node_name)
-                secondary_relations +=  node_name + "->" +sec_node_map[label] + secondary_attr
+                args = og_node_cmd[len(label):]
+                #print("\"" + args + "\"")
+                secondary_relations +=  node_name + "->" +sec_node_map[label] + secondary_attr.format(args)      #join function name  and function call
                 image_set_flag = False
                 for tag, img in icons_images.items():  #in list of images and tags
                     if decorator.find(tag) != -1:      #if found a tag name matching decorator 
