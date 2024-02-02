@@ -68,10 +68,11 @@ if __name__ == "__main__":
 
     file_path = sys.argv[1]  # Replace with your file path
 
-    real_file_path = ".smsh.tmp"
-    os.system("/usr/local/bin/.smsh/macro_preprocessor.py "+file_path+" "+real_file_path)
+    #real_file_path = ".smsh.tmp"
+    #os.system("/usr/local/bin/.smsh/macro_preprocessor.py "+file_path+" "+real_file_path)
 
-    nodes,decorators,blocks = read_and_filter_lines(real_file_path)
+    #nodes,decorators,blocks = read_and_filter_lines(real_file_path)
+    nodes,decorators,blocks = read_and_filter_lines(file_path)
 
     #decorators=>  label : decorator
     #nodes =>  label +(args) (optional)
